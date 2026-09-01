@@ -6,18 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <!-- Exclude folder test agar tidak ikut di-compile oleh main project -->
-  <ItemGroup>
-    <Compile Remove="Tests\**" />
-    <Compile Remove="MS_USER.Tests\**" />
-    <Content Remove="Tests\**" />
-    <Content Remove="MS_USER.Tests\**" />
-    <EmbeddedResource Remove="Tests\**" />
-    <EmbeddedResource Remove="MS_USER.Tests\**" />
-    <None Remove="Tests\**" />
-    <None Remove="MS_USER.Tests\**" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
