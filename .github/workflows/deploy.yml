@@ -29,7 +29,7 @@ jobs:
       run: dotnet restore MS_USER.slnx
 
     - name: Run Unit Tests
-      run: dotnet test MS_USER.Tests/MS_USER.Tests.csproj --configuration Release --no-restore
+      run: dotnet test Tests/MS_USER.Tests.csproj --configuration Release --no-restore
 
   # ---------------------------------------------------------
   # JOB 2: BUILD & PUSH DOCKER IMAGE (Jalan di dev-ramadi & master)
