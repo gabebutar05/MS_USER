@@ -1,0 +1,63 @@
+name: CI/CD Pipeline MS_USER
+
+on:
+  push:
+    branches: [ "master", "dev-ramadi" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ---------------------------------------------------------
+  # JOB 1: RUN UNIT TESTS (Jalan di dev-ramadi & master)
+  # ---------------------------------------------------------
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore MS_USER.sln
+
+    - name: Run Unit Tests
+      run: dotnet test MS_USER.Tests/MS_USER.Tests.csproj --configuration Release --no-restore
+
+  # ---------------------------------------------------------
+  # JOB 2: BUILD & PUSH DOCKER IMAGE (Jalan di dev-ramadi & master)
+  # ---------------------------------------------------------
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Log in to GitHub Container Registry (GHCR)
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        # Tag khusus: jika dari dev-ramadi pakai tag :dev, jika dari master pakai tag :latest
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name == 'master' && 'latest' || 'dev' }}
