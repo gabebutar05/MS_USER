@@ -2,7 +2,7 @@ name: CI/CD Pipeline MS_USER
 
 on:
   push:
-    branches: [ "master", "dev-ramadi" ]
+    branches: [ "master", "dev_ramadi" ]
   pull_request:
     branches: [ "master" ]
 
@@ -26,7 +26,7 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Restore Dependencies
-      run: dotnet restore MS_USER.sln
+      run: dotnet restore MS_USER.slnx
 
     - name: Run Unit Tests
       run: dotnet test MS_USER.Tests/MS_USER.Tests.csproj --configuration Release --no-restore
